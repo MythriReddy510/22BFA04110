@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple URL Shortener</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+
+    #result {
+      margin-top: 20px;
+    }
+
+    .short-url {
+      display: block;
+      margin-top: 10px;
+      color: blue;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>URL Shortener</h1>
+  <input type="text" id="longUrl" placeholder="Enter long URL" size="40" />
+  <button onclick="shortenUrl()">Shorten</button>
+
+  <div id="result"></div>
+
+  <script>
+    const urlMap = {};
+
+    function generateCode() {
+      return Math.random().toString(36).substring(2, 7);
+    }
+
+    function shortenUrl() {
+      const longUrl = document.getElementById('longUrl').value.trim();
+
+      if (!longUrl.startsWith("http://") && !longUrl.startsWith("https://")) {
+        alert("Please enter a valid URL starting with http:// or https://");
+        return;
+      }
+
+      const shortCode = generateCode();
+      urlMap[shortCode] = longUrl;
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `
+        <strong>Shortened URL:</strong>
+        <span class="short-url" onclick="redirect('${shortCode}')">
+          ${window.location.origin}/?s=${shortCode}
+        </span>
+      `;
+    }
+
+    function redirect(code) {
+      const url = urlMap[code];
+      if (url) {
+        window.open(url, '_blank');
+      } else {
+        alert("Short URL not found.");
+      }
+    }
+  </script>
+
+</body>
+</html>
